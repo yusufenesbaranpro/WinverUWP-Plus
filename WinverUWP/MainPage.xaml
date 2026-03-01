@@ -59,6 +59,91 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 <muxc:Expander
+                    x:Name="HardwareExpander"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
+                    d:IsExpanded="True"
+                    Collapsed="Expander_Collapsed"
+                    ExpandDirection="Down"
+                    Expanding="Expander_Expanding">
+                    <muxc:Expander.Header>
+                        <Grid>
+                            <TextBlock
+                                x:Uid="HardwareSpecifications"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center" />
+                        </Grid>
+                    </muxc:Expander.Header>
+                    <Grid
+                        HorizontalAlignment="Stretch"
+                        ColumnSpacing="20"
+                        RowSpacing="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Uid="Processor" />
+                        <TextBlock
+                            Name="ProcessorText"
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            d:Text="Intel Core Processor"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Uid="InstalledRAM" Grid.Row="1" />
+                        <TextBlock
+                            Name="RamText"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            d:Text="16 GB"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Uid="GraphicsCard" Grid.Row="2" />
+                        <TextBlock
+                            Name="GpuText"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            d:Text="NVIDIA Graphics"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Uid="Uptime" Grid.Row="3" />
+                        <TextBlock
+                            Name="UptimeText"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            d:Text="1d 2h 30m"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Uid="Battery" Grid.Row="4" />
+                        <TextBlock
+                            Name="BatteryText"
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            d:Text="100% (Charging)"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                            IsTextSelectionEnabled="True"
+                            TextWrapping="WrapWholeWords" />
+                    </Grid>
+                </muxc:Expander>
+
+                <muxc:Expander
                     x:Name="SpecExpander"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
@@ -329,13 +414,23 @@
                 </muxc:Expander>
             </StackPanel>
         </ScrollViewer>
-        <Button
-            x:Uid="OKButton"
+        <StackPanel
             Grid.Row="3"
-            Width="60"
-            Margin="10"
+            Orientation="Horizontal"
             HorizontalAlignment="Right"
-            Click="Button_Click"
-            Style="{StaticResource AccentButtonStyle}" />
+            Margin="10"
+            Spacing="10">
+            <Button
+                x:Name="ThemeButton"
+                Click="ThemeButton_Click"
+                ToolTipService.ToolTip="Toggle Theme">
+                <SymbolIcon Symbol="View" />
+            </Button>
+            <Button
+                x:Uid="OKButton"
+                Width="60"
+                Click="Button_Click"
+                Style="{StaticResource AccentButtonStyle}" />
+        </StackPanel>
     </Grid>
 </Page>

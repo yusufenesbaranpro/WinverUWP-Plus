@@ -156,4 +156,22 @@
   <data name="WindowsSpecifications.Text" xml:space="preserve">
     <value>Windows specifications</value>
   </data>
+  <data name="HardwareSpecifications.Text" xml:space="preserve">
+    <value>Hardware specifications</value>
+  </data>
+  <data name="Processor.Text" xml:space="preserve">
+    <value>Processor</value>
+  </data>
+  <data name="InstalledRAM.Text" xml:space="preserve">
+    <value>Installed RAM</value>
+  </data>
+  <data name="GraphicsCard.Text" xml:space="preserve">
+    <value>Graphics card</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>System uptime</value>
+  </data>
+  <data name="Battery.Text" xml:space="preserve">
+    <value>Battery status</value>
+  </data>
 </root>

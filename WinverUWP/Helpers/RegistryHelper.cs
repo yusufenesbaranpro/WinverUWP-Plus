@@ -118,10 +118,10 @@ public static unsafe class RegistryHelper
         }
     }
 
-    private static _KEY_VALUE_PARTIAL_INFORMATION* ReadInfo(string valueName)
+    private static _KEY_VALUE_PARTIAL_INFORMATION* ReadInfo(string valueName, string keyPath = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
     {
         Initialize();
-        fixed (char* key = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
+        fixed (char* key = keyPath)
         {
             UNICODE_STRING* uKeyName = (UNICODE_STRING*)malloc((nuint)sizeof(UNICODE_STRING));
             _RtlInitUnicodeString(uKeyName, (ushort*)key);
@@ -135,7 +135,16 @@ public static unsafe class RegistryHelper
                 RootDirectory = HANDLE.NULL
             };
             HANDLE hKey;
-            _NtOpenKey(&hKey, 0x80000000, &objectAttributes);
+            
+            // NtOpenKey requires the correct access mask. 0x80000000 is generic read.
+            // When opening HARDWARE keys, sometimes 0x20019 (READ) is safer, but Generic Read usually works for query.
+            int status = _NtOpenKey(&hKey, 0x80000000, &objectAttributes);
+
+            if (status != 0) // 0 is STATUS_SUCCESS
+            {
+                free(uKeyName);
+                return null;
+            }
 
             fixed (char* pValue = valueName)
             {
@@ -144,14 +153,15 @@ public static unsafe class RegistryHelper
                 // Query once to get the size of KEY_VALUE_PARTIAL_INFORMATION we need
                 uint resultLength;
                 int error = _NtQueryValueKey(hKey, uValueName, 2, null, 0, &resultLength);
-                if (error == -1073741772)
+                if (error != 0 && error != -1073741789) // STATUS_BUFFER_OVERFLOW or STATUS_BUFFER_TOO_SMALL are expected
                 {
-                    // Key doesn't exist
+                    // If error is strictly "Key doesn't exist" or other failure
                     _NtClose(hKey);
                     free(uValueName);
                     free(uKeyName);
                     return null;
                 }
+                
                 // Second query for value.
                 _KEY_VALUE_PARTIAL_INFORMATION* partialInfo = (_KEY_VALUE_PARTIAL_INFORMATION*)malloc(resultLength);
                 _NtQueryValueKey(hKey, uValueName, 2, partialInfo, resultLength, &resultLength);
@@ -163,9 +173,9 @@ public static unsafe class RegistryHelper
         }
     }
 
-    public static uint? GetInfoDWord(string valueName)
+    public static uint? GetInfoDWord(string valueName, string keyPath = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
     {
-        _KEY_VALUE_PARTIAL_INFORMATION* buf = ReadInfo(valueName);
+        _KEY_VALUE_PARTIAL_INFORMATION* buf = ReadInfo(valueName, keyPath);
         if (buf == null)
             return null;
         uint value = *(uint*)buf->Data;
@@ -173,11 +183,17 @@ public static unsafe class RegistryHelper
         return value;
     }
 
-    public static string? GetInfoString(string valueName)
+    public static string? GetInfoString(string valueName, string keyPath = @"\Registry\Machine\SOFTWARE\Microsoft\Windows NT\CurrentVersion")
     {
-        _KEY_VALUE_PARTIAL_INFORMATION* info = ReadInfo(valueName);
+        _KEY_VALUE_PARTIAL_INFORMATION* info = ReadInfo(valueName, keyPath);
         if (info == null)
             return null;
+        // Check if the data is null-terminated or valid
+        if (info->DataLength == 0)
+        {
+             free(info);
+             return "";
+        }
         string test = new string((char*)info->Data);
         free(info);
         return test;

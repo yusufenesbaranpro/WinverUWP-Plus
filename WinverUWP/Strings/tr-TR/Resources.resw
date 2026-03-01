@@ -156,4 +156,22 @@
   <data name="WindowsSpecifications.Text" xml:space="preserve">
     <value>Windows özellikleri</value>
   </data>
+  <data name="HardwareSpecifications.Text" xml:space="preserve">
+    <value>Donanım özellikleri</value>
+  </data>
+  <data name="Processor.Text" xml:space="preserve">
+    <value>İşlemci</value>
+  </data>
+  <data name="InstalledRAM.Text" xml:space="preserve">
+    <value>Yüklü RAM</value>
+  </data>
+  <data name="GraphicsCard.Text" xml:space="preserve">
+    <value>Ekran kartı</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>Çalışma süresi</value>
+  </data>
+  <data name="Battery.Text" xml:space="preserve">
+    <value>Pil durumu</value>
+  </data>
 </root>

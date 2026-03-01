@@ -201,6 +201,12 @@ public sealed partial class MainPage : Page
 
         if (string.IsNullOrEmpty(ownerName) && string.IsNullOrEmpty(ownerOrg))
             LicenseTo.Visibility = Visibility.Collapsed;
+
+        ProcessorText.Text = HardwareHelper.GetProcessorName();
+        RamText.Text = HardwareHelper.GetTotalMemory();
+        GpuText.Text = HardwareHelper.GetGPUName();
+        UptimeText.Text = HardwareHelper.GetUptime();
+        BatteryText.Text = HardwareHelper.GetBatteryStatus();
     }
 
     private void UpdateWindowsBrand()
@@ -246,4 +252,24 @@ public sealed partial class MainPage : Page
 
     private void Expander_Expanding(Microsoft.UI.Xaml.Controls.Expander sender, Microsoft.UI.Xaml.Controls.ExpanderExpandingEventArgs args)
         => ApplicationData.Current.LocalSettings.Values[sender.Name] = true;
+
+    private void ThemeButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (this.RequestedTheme == ElementTheme.Dark)
+        {
+            this.RequestedTheme = ElementTheme.Light;
+        }
+        else if (this.RequestedTheme == ElementTheme.Light)
+        {
+            this.RequestedTheme = ElementTheme.Dark;
+        }
+        else
+        {
+            // If Default, check system theme
+            if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                this.RequestedTheme = ElementTheme.Light;
+            else
+                this.RequestedTheme = ElementTheme.Dark;
+        }
+    }
 }
